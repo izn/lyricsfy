@@ -1,0 +1,26 @@
+{
+  "name": "lyricsfy",
+  "version": "1.0.0",
+  "description": "Spotify Lyrics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "lyricsfy": "./index.js"
+  },
+  "keywords": [
+    "spotify",
+    "lyrics",
+    "dbus"
+  ],
+  "author": "Thaynã Moretti",
+  "license": "ISC",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "dbus": "^1.0.5",
+    "jsdom": "^15.1.1",
+    "ora": "^3.4.0",
+    "request": "^2.88.0"
+  }
+}
