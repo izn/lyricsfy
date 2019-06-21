@@ -8,12 +8,14 @@ experimental terminal-based script to show lyrics based on current playing song 
 
 copy `config.sample.js` to `config.js` and put your genius api access token there.
 
-install all dependencies and create a binary link:
+install node dependencies and create a binary link:
 
 ```sh
 yarn install
-yarn link
+npm link
 ```
+
+also, make sure you have installed `libdbus-glib-1-dev`.
 
 ### usage
 
