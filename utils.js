@@ -1,5 +1,5 @@
 var showError = function(spinner, message = null) {
-  spinner.text = message || 'Something went wrong 😢'
+  spinner.text = message || 'Something went wrong.'
 
   spinner.fail()
   return process.exit(0)
