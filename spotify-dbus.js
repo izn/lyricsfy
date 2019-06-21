@@ -1,7 +1,7 @@
 const DBus = require('dbus')
 const { showError } = require('./utils')
 
-var SpotifyDBUS = {
+const SpotifyDBUS = {
   getSpotifyMetadata: function(spinner, callback) {
     DBus.getBus('session').getInterface(
       'org.mpris.MediaPlayer2.spotify',

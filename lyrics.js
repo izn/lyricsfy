@@ -5,7 +5,7 @@ const blessed = require('blessed')
 const config = require('./config')
 const { showError } = require('./utils')
 
-var Lyrics = {
+const Lyrics = {
   fetch: function(spinner, artist, title) {
     spinner.text = 'Searching...'
     spinner.start()
