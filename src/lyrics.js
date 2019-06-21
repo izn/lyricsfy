@@ -67,7 +67,19 @@ const Lyrics = {
 
   parseLyrics: function(dom) {
     let rawLyrics = dom.window.document.querySelector('.lyrics').textContent.trim()
-    let lyrics = rawLyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
+
+    let pageData = dom.window.document.querySelector('meta[itemprop="page_data"]')
+    let parsedDataContent = JSON.parse(pageData['content'])
+
+    let trackingData = parsedDataContent.tracking_data
+
+    let songTitle = trackingData[1].value
+    let artist = trackingData[2].value
+
+    let artistWithSongTitle = chalk.yellow.bold(`${artist} - ${songTitle}`)
+    let highlightedLyrics = rawLyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
+
+    let lyrics = [artistWithSongTitle, '\n', highlightedLyrics].join('\n')
 
     return lyrics
   },
