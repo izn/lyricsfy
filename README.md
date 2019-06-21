@@ -15,7 +15,11 @@ yarn install
 npm link
 ```
 
-also, make sure you have installed `libdbus-glib-1-dev`.
+#### dbus
+
+make sure you have installed `libdbus-glib-1-dev`.
+
+see [this](https://github.com/zbentley/dbus-osx-examples/tree/master/installation) for osx.
 
 ### usage
 
