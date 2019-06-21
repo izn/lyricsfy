@@ -20,10 +20,7 @@ const Lyrics = {
     const options = {
       method: 'GET',
       url: 'https://api.genius.com/search',
-      qs: {
-        q: query,
-        access_token: config.access_token
-      },
+      qs: { q: query, access_token: config.access_token },
     }
 
     request(options, (error, response, body) => {
@@ -66,20 +63,19 @@ const Lyrics = {
   },
 
   parseLyrics: function(dom) {
-    let rawLyrics = dom.window.document.querySelector('.lyrics').textContent.trim()
+    const rawLyrics = dom.window.document.querySelector('.lyrics').textContent.trim()
+    const pageData = dom.window.document.querySelector('meta[itemprop="page_data"]')
 
-    let pageData = dom.window.document.querySelector('meta[itemprop="page_data"]')
-    let parsedDataContent = JSON.parse(pageData['content'])
+    const parsedDataContent = JSON.parse(pageData['content'])
+    const trackingData = parsedDataContent.tracking_data
 
-    let trackingData = parsedDataContent.tracking_data
+    const songTitle = trackingData[1].value
+    const artist = trackingData[2].value
 
-    let songTitle = trackingData[1].value
-    let artist = trackingData[2].value
+    const artistWithSongTitle = chalk.yellow.bold(`${artist} - ${songTitle}`)
+    const highlightedLyrics = rawLyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
 
-    let artistWithSongTitle = chalk.yellow.bold(`${artist} - ${songTitle}`)
-    let highlightedLyrics = rawLyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
-
-    let lyrics = [artistWithSongTitle, '\n', highlightedLyrics].join('\n')
+    const lyrics = [artistWithSongTitle, '\n', highlightedLyrics].join('\n')
 
     return lyrics
   },
