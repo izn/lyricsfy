@@ -1,4 +1,6 @@
 const DBus = require('dbus')
+const chalk = require('chalk')
+
 const { showError } = require('./utils')
 
 const SpotifyDBUS = {
@@ -15,6 +17,11 @@ const SpotifyDBUS = {
           let title = metadata['xesam:title']
 
           spinner.succeed()
+
+          let currentSong = chalk.bold(`${artist} - ${title}`)
+
+          spinner.text = `Current song: ${currentSong}`
+          spinner.start().succeed()
 
           callback(spinner, artist, title)
         })
