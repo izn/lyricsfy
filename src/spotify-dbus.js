@@ -13,12 +13,12 @@ const SpotifyDBUS = {
         if (error || !interface) showError(spinner, 'Something went wrong. Is Spotify Running?')
 
         interface.getProperty('Metadata', function(error, metadata) {
-          let artist = metadata['xesam:artist'][0]
-          let title = metadata['xesam:title']
+          const artist = metadata['xesam:artist'][0]
+          const title = metadata['xesam:title']
 
           spinner.succeed()
 
-          let currentSong = chalk.bold(`${artist} - ${title}`)
+          const currentSong = chalk.bold(`${artist} - ${title}`)
 
           spinner.text = `Current song: ${currentSong}`
           spinner.start().succeed()
