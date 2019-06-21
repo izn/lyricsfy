@@ -2,7 +2,7 @@
 
 experimental terminal-based script to show lyrics based on current playing song on spotify desktop client.
 
-![Alt Text](https://i.imgur.com/RAczBwG.gif)
+![Demo](https://github.com/izn/lyricsfy/blob/master/demo.gif)
 
 ### setup
 
