@@ -30,4 +30,4 @@ const SpotifyDBUS = {
   }
 }
 
-module.exports = SpotifyDBUS
+module.exports = SpotifyDBUS.getSpotifyMetadata

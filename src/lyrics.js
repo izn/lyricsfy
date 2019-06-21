@@ -102,4 +102,4 @@ const Lyrics = {
   }
 }
 
-module.exports = Lyrics
+module.exports = Lyrics.fetch

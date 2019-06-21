@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 const ora = require('ora')
 
-const SpotifyDBUS = require('./spotify-dbus')
-const Lyrics = require('./lyrics')
+const getSpotifyMetadata = require('./spotify-dbus')
+const fetch = require('./lyrics')
 
 const spinner = ora('Starting...').start();
 
-SpotifyDBUS.getSpotifyMetadata(spinner, Lyrics.fetch)
+getSpotifyMetadata(spinner, fetch)
