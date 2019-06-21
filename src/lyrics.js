@@ -67,7 +67,7 @@ const Lyrics = {
 
   parseLyrics: function(dom) {
     let rawLyrics = dom.window.document.querySelector('.lyrics').textContent.trim()
-    let lyrics = rawLyrics.replace(/\[(.+)\]/g, chalk.green.bold('[$1]'))
+    let lyrics = rawLyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
 
     return lyrics
   },
