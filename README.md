@@ -1,12 +1,12 @@
 # lyricsfy
 
-experimental terminal-based script to show lyrics based on current playing song on spotify desktop player.
+experimental terminal-based script to show lyrics based on current playing song on spotify desktop client.
 
 ![Alt Text](https://i.imgur.com/RAczBwG.gif)
 
 ### setup
 
-copy `config.sample.js` to `config.js` and put your genius api access token there.
+copy `config.sample.js` to `config.js` and put your [genius api](https://genius.com/api-clients) access token there.
 
 install node dependencies and create a binary link:
 
