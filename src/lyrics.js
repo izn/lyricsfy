@@ -7,7 +7,7 @@ const config = require('./config')
 const { showError } = require('./utils')
 
 const Lyrics = {
-  fetch: function(spinner, artist, title) {
+  fetch: (spinner, artist, title) => {
     spinner.text = 'Searching lyrics'
     spinner.start()
 
@@ -16,11 +16,11 @@ const Lyrics = {
     Lyrics.searchQuery(spinner, query)
   },
 
-  searchQuery: function(spinner, query) {
+  searchQuery: (spinner, query) => {
     const options = {
       method: 'GET',
       url: 'https://api.genius.com/search',
-      qs: { q: query, access_token: config.access_token },
+      qs: { q: query, access_token: config.access_token }
     }
 
     request(options, (error, response, body) => {
@@ -30,7 +30,7 @@ const Lyrics = {
     })
   },
 
-  parseResults: function(spinner, body) {
+  parseResults: (spinner, body) => {
     const parsedBody = JSON.parse(body)
     const response = parsedBody.response
 
@@ -51,9 +51,10 @@ const Lyrics = {
     }
   },
 
-  fetchLyrics: function(spinner, path) {
+  fetchLyrics: (spinner, path) => {
     const geniusURL = `https://genius.com${path}`
-    const dom = jsdom.fromURL(geniusURL).then(dom => {
+
+    jsdom.fromURL(geniusURL).then(dom => {
       spinner.succeed()
 
       const lyrics = Lyrics.parseLyrics(dom)
@@ -62,7 +63,7 @@ const Lyrics = {
     })
   },
 
-  parseLyrics: function(dom) {
+  parseLyrics: (dom) => {
     const rawLyrics = dom.window.document.querySelector('.lyrics').textContent.trim()
     const pageData = dom.window.document.querySelector('meta[itemprop="page_data"]')
 
@@ -80,7 +81,7 @@ const Lyrics = {
     return lyrics
   },
 
-  startScreen: function(spinner, text) {
+  startScreen: (spinner, text) => {
     const screen = blessed.screen({ smartCSR: true })
 
     const box = blessed.box({
@@ -92,7 +93,7 @@ const Lyrics = {
       alwaysScroll: true,
       keys: true,
       vi: true,
-      content: text,
+      content: text
     })
 
     screen.append(box)

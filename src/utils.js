@@ -1,4 +1,4 @@
-var showError = function(spinner, message = null) {
+var showError = (spinner, message = null) => {
   spinner.text = message || 'Something went wrong.'
 
   spinner.fail()

@@ -4,29 +4,37 @@ const chalk = require('chalk')
 const { showError } = require('./utils')
 
 const SpotifyDBUS = {
-  getSpotifyMetadata: function(spinner, callback) {
-    DBus.getBus('session').getInterface(
-      'org.mpris.MediaPlayer2.spotify',
-      '/org/mpris/MediaPlayer2',
-      'org.mpris.MediaPlayer2.Player',
-      (error, interface) => {
-        if (error || !interface) showError(spinner, 'Something went wrong. Is Spotify Running?')
+  getInterface: (callback) => {
+    return DBus
+      .getBus('session')
+      .getInterface(
+        'org.mpris.MediaPlayer2.spotify',
+        '/org/mpris/MediaPlayer2',
+        'org.mpris.MediaPlayer2.Player',
+        callback
+      )
+  },
 
-        interface.getProperty('Metadata', function(error, metadata) {
-          const artist = metadata['xesam:artist'][0]
-          const title = metadata['xesam:title']
+  getSpotifyMetadata: (spinner, callback) => {
+    SpotifyDBUS.getInterface((error, iface) => {
+      if (error || !iface) showError(spinner, 'Something went wrong. Is Spotify Running?')
 
-          spinner.succeed()
+      iface.getProperty('Metadata', (error, metadata) => {
+        if (error) showError(spinner)
 
-          const currentSong = chalk.bold(`${artist} - ${title}`)
+        const artist = metadata['xesam:artist'][0]
+        const title = metadata['xesam:title']
 
-          spinner.text = `Current song: ${currentSong}`
-          spinner.start().succeed()
+        spinner.succeed()
 
-          callback(spinner, artist, title)
-        })
-      }
-    )
+        const currentSong = chalk.bold(`${artist} - ${title}`)
+
+        spinner.text = `Current song: ${currentSong}`
+        spinner.start().succeed()
+
+        callback(spinner, artist, title)
+      })
+    })
   }
 }
 
