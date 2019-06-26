@@ -1,6 +1,6 @@
 # lyricsfy
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/b98ee61347c5437985fd/maintainability)](https://codeclimate.com/github/izn/lyricsfy/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/b98ee61347c5437985fd/test_coverage)](https://codeclimate.com/github/izn/lyricsfy/test_coverage)
+ [![CircleCI](https://circleci.com/gh/izn/lyricsfy.svg?style=svg)](https://circleci.com/gh/izn/lyricsfy) [![Maintainability](https://api.codeclimate.com/v1/badges/b98ee61347c5437985fd/maintainability)](https://codeclimate.com/github/izn/lyricsfy/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/b98ee61347c5437985fd/test_coverage)](https://codeclimate.com/github/izn/lyricsfy/test_coverage)
 
 experimental terminal-based script to show lyrics based on current playing song on spotify desktop client.
 
