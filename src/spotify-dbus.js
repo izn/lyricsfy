@@ -1,41 +1,31 @@
-const DBus = require('dbus')
-const chalk = require('chalk')
+const DBus = require('dbus-next')
 
-const { showError } = require('./utils')
+const getProxyObject = async () => {
+  const sessionBus = DBus.sessionBus()
 
-const SpotifyDBUS = {
-  getInterface: (callback) => {
-    return DBus
-      .getBus('session')
-      .getInterface(
-        'org.mpris.MediaPlayer2.spotify',
-        '/org/mpris/MediaPlayer2',
-        'org.mpris.MediaPlayer2.Player',
-        callback
-      )
-  },
+  return sessionBus.getProxyObject(
+    'org.mpris.MediaPlayer2.spotify',
+    '/org/mpris/MediaPlayer2'
+  )
+}
 
-  getSpotifyMetadata: (spinner, callback) => {
-    SpotifyDBUS.getInterface((error, iface) => {
-      if (error || !iface) showError(spinner, 'Something went wrong. Is Spotify Running?')
+const getTrack = async (spinner) => {
+  try {
+    const proxyObject = await getProxyObject()
+    const properties = proxyObject.getInterface('org.freedesktop.DBus.Properties')
 
-      iface.getProperty('Metadata', (error, metadata) => {
-        if (error) showError(spinner)
+    const metadata = await properties.Get(
+      'org.mpris.MediaPlayer2.Player',
+      'Metadata'
+    )
 
-        const artist = metadata['xesam:artist'][0]
-        const title = metadata['xesam:title']
+    const artist = metadata.value['xesam:artist'].value[0]
+    const title = metadata.value['xesam:title'].value
 
-        spinner.succeed()
-
-        const currentSong = chalk.bold(`${artist} - ${title}`)
-
-        spinner.text = `Current song: ${currentSong}`
-        spinner.start().succeed()
-
-        callback(spinner, artist, title)
-      })
-    })
+    return { artist, title }
+  } catch (exception) {
+    throw new Error('Something went wrong. Is Spotify Running?')
   }
 }
 
-module.exports = SpotifyDBUS.getSpotifyMetadata
+module.exports = getTrack
