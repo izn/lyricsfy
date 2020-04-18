@@ -4,7 +4,7 @@
   "description": "Spotify Lyrics",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "bin": {
     "lyricsfy": "./src/index.js"
