@@ -18,4 +18,5 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+      - run: cp src/config.sample.js src/config.js
       - run: yarn test
