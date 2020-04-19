@@ -4,17 +4,17 @@ const chalk = require('chalk')
 
 const getTrack = require('./spotify-dbus')
 const getLyrics = require('./lyrics')
-const render = require('./screen')
+const renderScreen = require('./screen')
 
 const start = async () => {
   const spinner = ora('Starting...').start()
 
   try {
-    const { artist, title } = await getTrack(spinner)
+    const track = await getTrack(spinner)
 
     spinner.succeed()
 
-    const currentTrack = chalk.bold(`${artist} - ${title}`)
+    const currentTrack = chalk.bold(`${track.artist} - ${track.title}`)
 
     spinner.text = `Current song: ${currentTrack}`
     spinner.succeed()
@@ -22,11 +22,15 @@ const start = async () => {
     spinner.text = 'Searching lyrics...'
     spinner.start()
 
-    const lyrics = await getLyrics(artist, title)
+    const {
+      artist,
+      title,
+      lyrics
+    } = await getLyrics(track.artist, track.title)
 
     spinner.succeed()
 
-    render(lyrics)
+    renderScreen(artist, title, lyrics)
   } catch (exception) {
     spinner.fail(exception.message)
     process.exit(1)

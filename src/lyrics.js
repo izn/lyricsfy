@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const jsdom = require('jsdom').JSDOM
+const cheerio = require('cheerio')
 const chalk = require('chalk')
 
 const config = require('./config')
@@ -9,9 +9,9 @@ const GENIUS_URL = 'https://genius.com'
 const getLyrics = async (artist, title) => {
   const query = escape(`${artist} ${title}`)
 
-  const API_URL = `${GENIUS_API_URL}/search?access_token=${config.access_token}&q=${query}`
+  const geniusURL = `${GENIUS_API_URL}/search?access_token=${config.access_token}&q=${query}`
 
-  const response = await fetch(API_URL)
+  const response = await fetch(geniusURL)
   const data = await response.json()
 
   const songPath = getSongPath(data.response)
@@ -23,7 +23,6 @@ const getLyrics = async (artist, title) => {
 const getSongPath = (response) => {
   try {
     const firstHit = response.hits[0]
-
     return firstHit['result']['path']
   } catch (exception) {
     throw new Error('Lyrics not found :(')
@@ -31,31 +30,23 @@ const getSongPath = (response) => {
 }
 
 const fetchLyrics = async (path) => {
-  const fullURL = `${GENIUS_URL}${path}`
+  const geniusTrackURL = `${GENIUS_URL}${path}`
 
-  try {
-    const dom = await jsdom.fromURL(fullURL)
+  const response = await fetch(geniusTrackURL)
+  const responseHTML = await response.text()
 
-    const windowDocument = dom.window.document
+  const $ = cheerio.load(responseHTML)
 
-    const rawLyrics = windowDocument.querySelector('.lyrics').textContent.trim()
-    const pageData = windowDocument.querySelector('meta[itemprop="page_data"]')
+  const title = $('h1.header_with_cover_art-primary_info-title').text().trim()
+  const artist = $('a.header_with_cover_art-primary_info-primary_artist').text().trim()
 
-    const parsedDataContent = JSON.parse(pageData['content'])
-    const trackingData = parsedDataContent.tracking_data
+  const lyrics = $('.lyrics').text().trim()
 
-    const title = trackingData[1].value
-    const artist = trackingData[2].value
-
-    const artistWithSongTitle = chalk.yellow.bold(`${artist} - ${title}`)
-    const highlightedLyrics = rawLyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
-
-    const lyrics = [artistWithSongTitle, '\n', highlightedLyrics].join('\n')
-
-    return lyrics
-  } catch (exception) {
+  if (!title || !artist || !lyrics) {
     throw new Error('Error while parsing lyrics. Please, try again.')
   }
+
+  return { artist, title, lyrics }
 }
 
 module.exports = getLyrics

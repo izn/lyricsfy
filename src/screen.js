@@ -1,6 +1,12 @@
 const blessed = require('blessed')
+const chalk = require('chalk')
 
-const render = (content) => {
+const render = (artist, title, lyrics) => {
+  const screenTitle = chalk.yellow.bold(`${artist} - ${title}`)
+  const highlightedLyrics = lyrics.replace(/^\[(.+)\]/gm, chalk.green.bold('[$1]'))
+
+  const content = [screenTitle, '\n', highlightedLyrics].join('\n')
+
   const screen = blessed.screen({ smartCSR: true })
 
   const box = blessed.box({
