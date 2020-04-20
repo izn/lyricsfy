@@ -7,7 +7,7 @@ const render = (artist, title, lyrics) => {
 
   const content = [screenTitle, '\n', highlightedLyrics].join('\n')
 
-  const screen = blessed.screen({ smartCSR: true })
+  const screen = blessed.screen({ smartCSR: true, fullUnicode: true })
 
   const box = blessed.box({
     width: '85%',
