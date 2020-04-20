@@ -13,6 +13,7 @@ const {
 const spinner = ora('Starting...').start()
 
 let mainScreen
+let currentTrackID
 
 const getCurrentSong = () => {
   return new Promise(async (resolve) => {
@@ -20,6 +21,8 @@ const getCurrentSong = () => {
       const track = await getTrack()
 
       spinner.succeed()
+
+      currentTrackID = track.trackID
 
       resolve({
         artist: track.artist,
@@ -73,11 +76,16 @@ getCurrentSong()
 
 // BETA: Auto-reload
 
-metadataChangeListener(({ artist, title }) => {
+metadataChangeListener(({ trackID, artist, title }) => {
+  if (currentTrackID === trackID) {
+    return
+  }
+
   mainScreen.realloc()
 
   fetchLyrics(artist, title)
     .then(({ artist, title, lyrics }) => {
+      currentTrackID = trackID
       drawScreen(artist, title, lyrics)
     })
 })

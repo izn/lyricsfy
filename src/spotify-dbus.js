@@ -2,6 +2,7 @@ const DBus = require('dbus-next')
 
 const getMetadataArtist = (metadata) => metadata.value['xesam:artist'].value[0]
 const getMetadataTitle = (metadata) => metadata.value['xesam:title'].value
+const getMetadataTrackID = (metadata) => metadata.value['mpris:trackid'].value
 
 const getProperties = async () => {
   const sessionBus = DBus.sessionBus()
@@ -46,12 +47,12 @@ const metadataChangeListener = async (callback) => {
 
     metadataChangeTimer = setTimeout(() => {
       let metadata = changed['Metadata']
-      let playbackStatus = changed['PlaybackStatus']
 
+      let trackID = getMetadataTrackID(metadata)
       let artist = getMetadataArtist(metadata)
       let title = getMetadataTitle(metadata)
 
-      callback({ artist, title })
+      callback({ trackID, artist, title })
     }, 1000)
   })
 }
