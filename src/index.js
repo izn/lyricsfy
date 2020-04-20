@@ -74,9 +74,8 @@ getCurrentSong()
       })
   })
 
-// BETA: Auto-reload
-
-metadataChangeListener(({ trackID, artist, title }) => {
+// ALPHA: Auto-reload lyrics
+metadataChangeListener((_, { trackID, artist, title }) => {
   if (currentTrackID === trackID) {
     return
   }

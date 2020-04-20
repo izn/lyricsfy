@@ -52,7 +52,7 @@ const metadataChangeListener = async (callback) => {
       let artist = getMetadataArtist(metadata)
       let title = getMetadataTitle(metadata)
 
-      callback({ trackID, artist, title })
+      callback(null, { trackID, artist, title })
     }, 1000)
   })
 }
