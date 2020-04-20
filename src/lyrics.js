@@ -1,6 +1,5 @@
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
-const chalk = require('chalk')
 
 const config = require('./config')
 const GENIUS_API_URL = 'https://api.genius.com'
