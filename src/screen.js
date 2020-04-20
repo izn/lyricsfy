@@ -25,6 +25,8 @@ const render = (artist, title, lyrics) => {
   screen.render()
 
   screen.key(['escape', 'q', 'C-c'], () => process.exit(0))
+
+  return screen
 }
 
 module.exports = render
