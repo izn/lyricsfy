@@ -2,39 +2,82 @@
 const ora = require('ora')
 const chalk = require('chalk')
 
-const getTrack = require('./spotify-dbus')
 const getLyrics = require('./lyrics')
 const renderScreen = require('./screen')
 
-const start = async () => {
-  const spinner = ora('Starting...').start()
+const {
+  getTrack,
+  metadataChangeListener
+} = require('./spotify-dbus')
 
-  try {
-    const track = await getTrack(spinner)
+const spinner = ora('Starting...').start()
 
-    spinner.succeed()
+let mainScreen
 
-    const currentTrack = chalk.bold(`${track.artist} - ${track.title}`)
+const getCurrentSong = () => {
+  return new Promise(async (resolve) => {
+    try {
+      const track = await getTrack()
 
-    spinner.text = `Current song: ${currentTrack}`
-    spinner.succeed()
+      spinner.succeed()
 
-    spinner.text = 'Searching lyrics...'
-    spinner.start()
-
-    const {
-      artist,
-      title,
-      lyrics
-    } = await getLyrics(track.artist, track.title)
-
-    spinner.succeed()
-
-    renderScreen(artist, title, lyrics)
-  } catch (exception) {
-    spinner.fail(exception.message)
-    process.exit(1)
-  }
+      resolve({
+        artist: track.artist,
+        title: track.title
+      })
+    } catch (exception) {
+      spinner.fail(exception.message)
+      process.exit(1)
+    }
+  })
 }
 
-start()
+const fetchLyrics = (currentArtist, currentTitle) => {
+  return new Promise(async (resolve) => {
+    try {
+      const currentTrack = chalk.bold(`${currentArtist} - ${currentTitle}`)
+
+      spinner.text = `Current song: ${currentTrack}`
+      spinner.succeed()
+
+      spinner.text = 'Searching lyrics...'
+      spinner.start()
+
+      const {
+        artist,
+        title,
+        lyrics
+      } = await getLyrics(currentArtist, currentTitle)
+
+      spinner.succeed()
+
+      resolve({ artist, title, lyrics })
+    } catch (exception) {
+      spinner.fail(exception.message)
+      process.exit(1)
+    }
+  })
+}
+
+const drawScreen = (artist, title, lyrics) => {
+  mainScreen = renderScreen(artist, title, lyrics)
+}
+
+getCurrentSong()
+  .then(({ artist, title }) => {
+    fetchLyrics(artist, title)
+      .then(({ artist, title, lyrics }) => {
+        drawScreen(artist, title, lyrics)
+      })
+  })
+
+// BETA: Auto-reload
+
+metadataChangeListener(({ artist, title }) => {
+  mainScreen.realloc()
+
+  fetchLyrics(artist, title)
+    .then(({ artist, title, lyrics }) => {
+      drawScreen(artist, title, lyrics)
+    })
+})
