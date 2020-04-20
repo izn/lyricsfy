@@ -76,7 +76,7 @@ getCurrentSong()
 
 // ALPHA: Auto-reload lyrics
 metadataChangeListener((_, { trackID, artist, title }) => {
-  if (currentTrackID === trackID) {
+  if (currentTrackID === trackID || !mainScreen) {
     return
   }
 
