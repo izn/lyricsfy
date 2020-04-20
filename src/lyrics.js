@@ -7,7 +7,7 @@ const GENIUS_API_URL = 'https://api.genius.com'
 const GENIUS_URL = 'https://genius.com'
 
 const getLyrics = async (artist, title) => {
-  const query = escape(`${artist} ${title}`)
+  const query = encodeURIComponent(`${artist} ${title}`)
 
   const geniusURL = `${GENIUS_API_URL}/search?access_token=${config.access_token}&q=${query}`
 
