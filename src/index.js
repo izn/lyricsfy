@@ -13,7 +13,7 @@ const {
 const spinner = ora('Starting...').start()
 
 let mainScreen
-let currentTrackID
+let lastTrackID
 
 const getCurrentSong = () => {
   return new Promise(async (resolve) => {
@@ -22,7 +22,7 @@ const getCurrentSong = () => {
 
       spinner.succeed()
 
-      currentTrackID = track.trackID
+      lastTrackID = track.trackID
 
       resolve({
         artist: track.artist,
@@ -66,25 +66,32 @@ const drawScreen = (artist, title, lyrics) => {
   mainScreen = renderScreen(artist, title, lyrics)
 }
 
-getCurrentSong()
-  .then(({ artist, title }) => {
-    fetchLyrics(artist, title)
-      .then(({ artist, title, lyrics }) => {
-        drawScreen(artist, title, lyrics)
-      })
-  })
+(async () => {
+  const currentSong = await getCurrentSong()
+
+  const { artist, title, lyrics } = await fetchLyrics(
+    currentSong.artist,
+    currentSong.title
+  )
+
+  drawScreen(artist, title, lyrics)
+})()
 
 // ALPHA: Auto-reload lyrics
-metadataChangeListener((_, { trackID, artist, title }) => {
-  if (currentTrackID === trackID || !mainScreen) {
+metadataChangeListener(async (_, {
+  trackID: currentTrackID,
+  artist: currentArtist,
+  title: currentTitle
+}) => {
+  if (lastTrackID === currentTrackID || !mainScreen) {
     return
   }
 
   mainScreen.realloc()
 
-  fetchLyrics(artist, title)
-    .then(({ artist, title, lyrics }) => {
-      currentTrackID = trackID
-      drawScreen(artist, title, lyrics)
-    })
+  const { artist, title, lyrics } = await fetchLyrics(currentArtist, currentTitle)
+
+  currentTrackID = trackID
+
+  drawScreen(artist, title, lyrics)
 })
