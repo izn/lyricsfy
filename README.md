@@ -8,8 +8,6 @@ experimental terminal-based script to show lyrics based on current playing song 
 
 ### setup
 
-copy `src/config.sample.js` to `src/config.js` and put your [genius api](https://genius.com/api-clients) access token there.
-
 install node dependencies and create a binary link:
 
 ```sh

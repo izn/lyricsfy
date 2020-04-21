@@ -29,13 +29,19 @@ describe('getLyrics', () => {
 
   describe('when lyrics exists', () => {
     beforeEach(async () => {
-      nock('https://api.genius.com')
-        .get(/\/search\?access_token=(\w+)&q=(.+)/)
+      nock('https://genius.com')
+        .get(/\/api\/search\/multi\?q=(.+)/)
         .reply(200, {
           response: {
-            hits: [
-              { result: { path: '/cocteau-twins-heaven-or-las-vegas' } },
-              { result: { path: '/peacock-affect-wallflower' } }
+            sections: [
+              { type: 'top', hits: [] },
+              {
+                type: 'song',
+                hits: [
+                  { result: { path: '/cocteau-twins-heaven-or-las-vegas' } },
+                  { result: { path: '/peacock-affect-wallflower' } }
+                ]
+              }
             ]
           }
         })
@@ -62,8 +68,8 @@ describe('getLyrics', () => {
 
   describe('when lyrics are not found', () => {
     beforeEach(() => {
-      nock('https://api.genius.com')
-        .get(/\/search\?access_token=(\w+)&q=(.+)/)
+      nock('https://genius.com')
+        .get(/\/api\/search\/multi\?q=(.+)/)
         .reply(200, { response: {} })
     })
 
@@ -75,12 +81,17 @@ describe('getLyrics', () => {
 
   describe('when parser fails', () => {
     beforeEach(() => {
-      nock('https://api.genius.com')
-        .get(/\/search\?access_token=(\w+)&q=(.+)/)
+      nock('https://genius.com')
+        .get(/\/api\/search\/multi\?q=(.+)/)
         .reply(200, {
           response: {
-            hits: [
-              { result: { path: '/cocteau-twins-heaven-or-las-vegas' } }
+            sections: [
+              {
+                type: 'song',
+                hits: [
+                  { result: { path: '/cocteau-twins-heaven-or-las-vegas' } }
+                ]
+              }
             ]
           }
         })

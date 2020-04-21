@@ -1,28 +1,28 @@
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 
-const config = require('./config')
-const GENIUS_API_URL = 'https://api.genius.com'
 const GENIUS_URL = 'https://genius.com'
 
 const getLyrics = async (artist, title) => {
   const query = encodeURIComponent(`${artist} ${title}`)
 
-  const geniusURL = `${GENIUS_API_URL}/search?access_token=${config.access_token}&q=${query}`
+  const geniusURL = `${GENIUS_URL}/api/search/multi?q=${query}`
 
   const response = await fetch(geniusURL)
   const data = await response.json()
 
   const songPath = getSongPath(data.response)
-  const lyrics = fetchLyrics(songPath)
+  const lyrics = await fetchLyrics(songPath)
 
   return lyrics
 }
 
 const getSongPath = (response) => {
   try {
-    const firstHit = response.hits[0]
-    return firstHit['result']['path']
+    const songSection = response.sections.find(section => section.type == 'song')
+    const firstHit = songSection.hits[0]
+
+    return firstHit.result.path
   } catch (exception) {
     throw new Error('Lyrics not found :(')
   }
