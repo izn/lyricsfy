@@ -78,20 +78,19 @@ const drawScreen = (artist, title, lyrics) => {
 })()
 
 // ALPHA: Auto-reload lyrics
-metadataChangeListener(async (_, {
-  trackID: currentTrackID,
-  artist: currentArtist,
-  title: currentTitle
-}) => {
-  if (lastTrackID === currentTrackID || !mainScreen) {
+metadataChangeListener(async (_, currentSong) => {
+  if (lastTrackID === currentSong.trackID || !mainScreen) {
     return
   }
 
   mainScreen.realloc()
 
-  const { artist, title, lyrics } = await fetchLyrics(currentArtist, currentTitle)
+  const { artist, title, lyrics } = await fetchLyrics(
+    currentSong.artist,
+    currentSong.title
+  )
 
-  currentTrackID = trackID
+  currentTrackID = currentSong.trackID
 
   drawScreen(artist, title, lyrics)
 })
