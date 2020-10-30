@@ -22,9 +22,8 @@ const getCurrentSong = () => {
 
       spinner.succeed()
 
-      lastTrackID = track.trackID
-
       resolve({
+        trackID: track.trackID,
         artist: track.artist,
         title: track.title
       })
@@ -69,6 +68,8 @@ const drawScreen = (artist, title, lyrics) => {
 (async () => {
   const currentSong = await getCurrentSong()
 
+  lastTrackID = currentSong.trackID
+
   const { artist, title, lyrics } = await fetchLyrics(
     currentSong.artist,
     currentSong.title
@@ -89,8 +90,6 @@ metadataChangeListener(async (_, currentSong) => {
     currentSong.artist,
     currentSong.title
   )
-
-  currentTrackID = currentSong.trackID
 
   drawScreen(artist, title, lyrics)
 })

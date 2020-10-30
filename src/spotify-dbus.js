@@ -28,10 +28,11 @@ const getTrack = async () => {
   try {
     const metadata = await getMetadata()
 
+    const trackID = getMetadataTrackID(metadata)
     const artist = getMetadataArtist(metadata)
     const title = getMetadataTitle(metadata)
 
-    return { artist, title }
+    return { trackID, artist, title }
   } catch (exception) {
     throw new Error('Something went wrong. Is Spotify Running?')
   }
